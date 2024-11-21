@@ -1,0 +1,90 @@
+// Fetch content from user-defined sources
+async function fetchContent(sources) {
+    const contentList = document.getElementById('briefingList');
+    contentList.innerHTML = "Fetching your content...";
+
+    const briefingItems = [];
+
+    for (let source of sources) {
+        try {
+            const response = await fetch(source);
+            const data = await response.json();
+
+            // For simplicity, assuming sources return articles in a `title` property
+            (data.articles || []).forEach(article => {
+                briefingItems.push(article.title);
+            });
+        } catch (err) {
+            briefingItems.push(`Error fetching content from ${source}`);
+        }
+    }
+
+    // Populate the list
+    contentList.innerHTML = "";
+    briefingItems.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        contentList.appendChild(li);
+    });
+
+    // Generate audio from collected content
+    generateAudio(briefingItems.join(". "));
+}
+
+// Text-to-Speech (Converts the briefing into audio)
+function generateAudio(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.2; // Slightly faster speech
+    window.speechSynthesis.speak(utterance);
+}
+
+// Save settings locally
+document.getElementById('settingsForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const sources = document.getElementById('sources').value.split(',').map(url => url.trim());
+    const schedule = document.getElementById('schedule').value;
+
+    localStorage.setItem('briefingSources', JSON.stringify(sources));
+    localStorage.setItem('briefingSchedule', schedule);
+
+    alert('Settings saved!');
+    setupDailySchedule();
+});
+
+// Schedule daily content fetching
+function setupDailySchedule() {
+    const schedule = localStorage.getItem('briefingSchedule');
+    const sources = JSON.parse(localStorage.getItem('briefingSources'));
+
+    if (!schedule || !sources) return;
+
+    // Calculate time remaining until the scheduled time
+    const now = new Date();
+    const [hours, minutes] = schedule.split(':').map(Number);
+    const nextFetch = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
+    if (nextFetch < now) {
+        // If the time has already passed, schedule for the next day
+        nextFetch.setDate(nextFetch.getDate() + 1);
+    }
+
+    const timeUntilFetch = nextFetch - now;
+
+    setTimeout(() => {
+        fetchContent(sources); // Fetch content at the scheduled time
+        setupDailySchedule(); // Reschedule for the next day
+    }, timeUntilFetch);
+}
+
+// Initialize the app
+(function init() {
+    // Load saved settings and set up the daily schedule
+    const sources = JSON.parse(localStorage.getItem('briefingSources')) || [];
+    const schedule = localStorage.getItem('briefingSchedule') || '08:30';
+
+    document.getElementById('sources').value = sources.join(', ');
+    document.getElementById('schedule').value = schedule;
+
+    setupDailySchedule();
+})();
