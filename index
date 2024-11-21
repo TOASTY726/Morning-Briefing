@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Morning Briefing App">
+    <title>Morning Briefing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>Morning Briefing</h1>
+        </header>
+        <main>
+            <section id="settings">
+                <h2>Settings</h2>
+                <form id="settingsForm">
+                    <label for="sources">Enter RSS/News API URLs (comma-separated):</label><br>
+                    <textarea id="sources" placeholder="Add URLs here"></textarea><br>
+                    <label for="schedule">Schedule (Daily Time, e.g., 08:30):</label><br>
+                    <input type="time" id="schedule" value="08:30"><br>
+                    <button type="submit">Save Settings</button>
+                </form>
+            </section>
+            <section id="content">
+                <h2>Your Briefing</h2>
+                <ul id="briefingList"></ul>
+            </section>
+            <section id="audio">
+                <h2>Audio Playback</h2>
+                <audio controls id="audioPlayer"></audio>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
