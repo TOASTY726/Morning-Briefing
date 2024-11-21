@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+.app {
+    padding: 20px;
+    text-align: center;
+}
+
+header {
+    background: #6200ea;
+    color: white;
+    padding: 10px 0;
+}
+
+h1 {
+    margin: 0;
+}
+
+button {
+    background: #03a9f4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0288d1;
+}
+
+textarea, input {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+audio {
+    width: 100%;
+}
+
+section {
+    margin: 20px 0;
+}
